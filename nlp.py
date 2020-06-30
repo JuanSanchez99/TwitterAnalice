@@ -42,7 +42,7 @@ def get_searches():
                       access_token_key='1277317769579593730-bqYImqZNencT6xukGGpugjCcSupcHj',
                       access_token_secret='ppIBsZ9TXeX8XNhNdLLb4CiOlogVuOfRqAYqBq4u2UzTQ')
 
-    searches_list = api.GetSearch(term='covid', count=100, lang='en')
+    searches_list = api.GetSearch(term='covid', count=100, lang='en', result_type='popular')
 
     df = pd.DataFrame(searches_list)
 
