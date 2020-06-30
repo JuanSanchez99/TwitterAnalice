@@ -110,10 +110,9 @@ def perform_nlp(searches_list):
 def draw_something(df):
     df.plot(x='location', y='favorite_count')
 
-    print(df.groupby('created_at').count())
+    df['created_at'] = pd.to_datetime(df['created_at'])
 
-    df.plot(x='created_at')
-
+    print(df.groupby(df['created_at'].dt.strftime('%B')).count())
 
 
 if __name__ == '__main__':
