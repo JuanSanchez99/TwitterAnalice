@@ -6,7 +6,6 @@ import pandas as pd
 import re
 from negspacy.negation import Negex
 
-
 URL_PATTERN = r'(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\((' \
               r'[^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,' \
               r'<>?«»“”‘’])) '
@@ -44,15 +43,19 @@ def get_searches():
                       access_token_secret='ppIBsZ9TXeX8XNhNdLLb4CiOlogVuOfRqAYqBq4u2UzTQ')
 
     searches_list = api.GetSearch(term='covid', count=100, lang='en')
+
     searches_list = list(map(lambda x: x.AsDict(), searches_list))
+
+    def get_location(x):
+        if 'location' in x['user']:
+            x['location'] = x['user']['location']
+        return x
+
+    searches_list = list(map(get_location, searches_list))
 
     df = pd.DataFrame.from_records(searches_list, index=['id'])
 
-    print("************** Data frame ***********")
-
-    print(df)
-
-    print("********* end data frame *************")
+    df['location'].dropna()
 
     return df, map(lambda x: proc_str(x['text']), searches_list)
 
@@ -104,8 +107,21 @@ def perform_nlp(searches_list):
         print("************************************")
 
 
+def draw_something(df):
+    df.plot(x='location', y='favorite_count')
+
+    print(df.groupby('created_at').count())
+
+    df.plot(x='created_at')
+
+
 if __name__ == '__main__':
     df, searches = get_searches()
 
+    draw_something(df)
 
     perform_nlp(searches)
+
+    print(df)
+
+
