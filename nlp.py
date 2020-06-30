@@ -1,5 +1,6 @@
 import twitter
 import spacy
+from nltk.stem.snowball import SnowballStemmer
 import unidecode
 import pandas as pd
 import re
@@ -59,6 +60,8 @@ def perform_nlp(searches_list):
 
     texts = tuple(searches_list)
 
+    stemmer = SnowballStemmer(language='english')
+
     for text in texts:
         doc = nlp(text)
         print("----------------tweet-----------")
@@ -80,6 +83,16 @@ def perform_nlp(searches_list):
         print("***(Negation:)***")
         for e in doc.ents:
             print(e.text, e._.negex)
+
+        print("***(Stemming)***")
+        for token in doc:
+            if token.text != stemmer.stem(token.text):
+                print(token.text + ' --> ' + stemmer.stem(token.text))
+
+        print("***(Lemmatization)***")
+        for word in nlp(text):
+            if word.text != stemmer.stem(word.lemma_):
+                print(word.text, word.lemma_)
 
         print("************************************")
 
