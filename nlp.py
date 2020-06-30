@@ -43,11 +43,18 @@ def get_searches():
                       access_token_key='1277317769579593730-bqYImqZNencT6xukGGpugjCcSupcHj',
                       access_token_secret='ppIBsZ9TXeX8XNhNdLLb4CiOlogVuOfRqAYqBq4u2UzTQ')
 
-    searches_list = api.GetSearch(term='covid', count=100, lang='en', result_type='popular')
+    searches_list = api.GetSearch(term='covid', count=100, lang='en')
+    searches_list = list(map(lambda x: x.AsDict(), searches_list))
 
-    df = pd.DataFrame(searches_list)
+    df = pd.DataFrame.from_records(searches_list, index=['id'])
 
-    return df, map(lambda x: proc_str(x.text), searches_list)
+    print("************** Data frame ***********")
+
+    print(df)
+
+    print("********* end data frame *************")
+
+    return df, map(lambda x: proc_str(x['text']), searches_list)
 
 
 def perform_nlp(searches_list):
@@ -99,5 +106,6 @@ def perform_nlp(searches_list):
 
 if __name__ == '__main__':
     df, searches = get_searches()
+
 
     perform_nlp(searches)
