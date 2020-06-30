@@ -115,6 +115,7 @@ def draw_something(df):
     df.plot(x='created_at')
 
 
+
 if __name__ == '__main__':
     df, searches = get_searches()
 
