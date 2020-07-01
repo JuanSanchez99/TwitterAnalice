@@ -1,3 +1,6 @@
+# Juan Sanchez - 20171020131
+# Julian Barrios - 20171020123
+
 import twitter
 import spacy
 from nltk.stem.snowball import SnowballStemmer
